@@ -394,6 +394,7 @@ add_subdirectory(awtk/tools)
 
 #编译example
 add_subdirectory(awtk-examples/HelloWorld.Xml-Demo)
+add_subdirectory(awtk-examples/HelloWorld.Max-Demo)
 add_subdirectory(awtk-examples/Chart-Demo)
 add_subdirectory(awtk-examples/CleanAir-Demo)
 add_subdirectory(awtk-examples/HelloDesigner-Demo)
