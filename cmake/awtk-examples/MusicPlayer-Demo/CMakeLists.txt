@@ -21,8 +21,7 @@ set_target_properties(${PRJ} PROPERTIES LINK_FLAGS ${OS_LINKFLAGS} LINK_FLAGS ${
 # 引用目录
 target_include_directories(${PRJ} PRIVATE ${CPPPATH})
 
-#库目录
-target_link_directories(${PRJ} PRIVATE ${TK_LIB_DIR})
+
 
 # 引用库
 target_link_libraries(${PRJ} PRIVATE awtk)

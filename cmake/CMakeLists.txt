@@ -1,5 +1,5 @@
 ﻿# cmake最低版本
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.8)
 
 # 启用IDE目录功能
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -40,11 +40,7 @@ else()
     set(INPUT_ENGINE "null")
 endif(GPINYIN_ENABLE)
 
-if(CMAKE_SYSTEM_NAME MATCHES "Windows") 
-    set(NANOVG_BACKEND "GLES2" CACHE STRING "")
-else()
-    set(NANOVG_BACKEND "GL3" CACHE STRING "")
-endif()
+set(NANOVG_BACKEND "AGGE" CACHE STRING "")
 set_property(CACHE NANOVG_BACKEND PROPERTY STRINGS "AGGE" "GLES2" "GLES3" "AGG")
 
 
@@ -356,7 +352,7 @@ set(SOURCE_FILES ${SOURCE_FILES} ${SDL_SRC})
 add_library(${PROJ} STATIC ${SOURCE_FILES})
 set_target_properties(${PROJ} PROPERTIES FOLDER "lib")
 target_link_libraries(${PROJ} ${OS_LIBS})
-add_compile_options(${COMMON_CFLAGS})
+# add_compile_options(${COMMON_CFLAGS})
 set_target_properties(${PROJ} PROPERTIES STATIC_LABRARY_FLAGS ${OS_LINKFLAGS} STATIC_LABRARY_FLAGS ${OS_SUBSYSTEM_CONSOLE})
 add_definitions(${OS_FLAGS} ${COMMON_CCFLAGS})
 
@@ -391,6 +387,8 @@ target_include_directories(${PROJ} PRIVATE ${CPPPATH})
 add_subdirectory(awtk/demos)
 #编译tools
 add_subdirectory(awtk/tools)
+#编译tests
+add_subdirectory(awtk/tests)
 
 #编译example
 add_subdirectory(awtk-examples/HelloWorld.Xml-Demo)
@@ -400,5 +398,3 @@ add_subdirectory(awtk-examples/CleanAir-Demo)
 add_subdirectory(awtk-examples/HelloDesigner-Demo)
 add_subdirectory(awtk-examples/MusicPlayer-Demo)
 add_subdirectory(awtk-examples/SmartWatch-Demo)
-#编译tests
-add_subdirectory(awtk/tests)

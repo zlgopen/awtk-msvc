@@ -8,40 +8,50 @@ add_definitions(${OS_FLAGS} ${COMMON_CCFLAGS})
 function(tools_prop_config libname binname)
     set_target_properties(${libname} PROPERTIES FOLDER "lib")
     target_include_directories(${libname} PRIVATE ${CPPPATH})
+    add_definitions(${OS_FLAGS} ${COMMON_CCFLAGS})
 
     set_target_properties(${binname} PROPERTIES FOLDER "tools")
     target_link_libraries(
         ${binname} PRIVATE
-        awtk
         ${libname}
         common
+        awtk
     )
     target_include_directories(${binname} PRIVATE ${CPPPATH})
     set_target_properties(${binname} PROPERTIES
         LINK_FLAGS ${OS_LINKFLAGS} 
         LINK_FLAGS ${OS_SUBSYSTEM_CONSOLE}
     )
+    add_definitions(${OS_FLAGS} ${COMMON_CCFLAGS})
 endfunction(tools_prop_config)
 
 #theme_gen
-add_library(libtheme_gen
+add_library(libthemegen
     ${TK_ROOT}/tools/theme_gen/theme_gen.cc
     ${TK_ROOT}/tools/theme_gen/xml_theme_gen.cc
 )
-add_executable(theme_gen ${TK_ROOT}/tools/theme_gen/main.cc)
-tools_prop_config(libtheme_gen theme_gen)
+add_executable(themegen ${TK_ROOT}/tools/theme_gen/main.cc)
+tools_prop_config(libthemegen themegen)
 
 #font_gen
-add_library(libfont_gen ${TK_ROOT}/tools/font_gen/font_gen.c)
-add_executable(font_gen ${TK_ROOT}/tools/font_gen/main.c)
+add_library(libfontgen ${TK_ROOT}/tools/font_gen/font_gen.c)
+add_executable(fontgen ${TK_ROOT}/tools/font_gen/main.c)
 add_executable(genascii ${TK_ROOT}/tools/font_gen/gen_ascii.c)
-tools_prop_config(libfont_gen font_gen)
-tools_prop_config(libfont_gen genascii)
+tools_prop_config(libfontgen fontgen)
+tools_prop_config(libfontgen genascii)
 
 #image_gen
-add_library(libimage_gen ${TK_ROOT}/tools/image_gen/image_gen.c)
-add_executable(image_gen ${TK_ROOT}/tools/image_gen/main.c)
-tools_prop_config(libimage_gen image_gen)
+add_library(libimagegen ${TK_ROOT}/tools/image_gen/image_gen.c)
+add_executable(imagegen ${TK_ROOT}/tools/image_gen/main.c)
+tools_prop_config(libimagegen imagegen)
+
+#str_gen
+add_library(libstrgen
+    ${TK_ROOT}/tools/str_gen/xml_str_gen.cc
+    ${TK_ROOT}/tools/str_gen/str_gen.cc
+ )
+add_executable(strgen ${TK_ROOT}/tools/str_gen/main.cc)
+tools_prop_config(libstrgen strgen)
 
 #image_resize
 add_executable(image_resize ${TK_ROOT}/tools/image_resize/resize.c)
@@ -61,6 +71,7 @@ foreach(bin ${bin_list})
         LINK_FLAGS ${OS_LINKFLAGS} 
         LINK_FLAGS ${OS_SUBSYSTEM_CONSOLE}
     )
+    add_definitions(${OS_FLAGS} ${COMMON_CCFLAGS})
 endforeach(bin)
 
 #res_gen
@@ -72,17 +83,12 @@ function(res_bin_gen_config binname)
         LINK_FLAGS ${OS_LINKFLAGS}
         LINK_FLAGS ${OS_SUBSYSTEM_CONSOLE}
     )
+    add_definitions(${OS_FLAGS} ${COMMON_CCFLAGS})    
 endfunction(res_bin_gen_config)
-add_executable(res_gen ${TK_ROOT}/tools/res_gen/main.c)
-res_bin_gen_config(res_gen)
+add_executable(resgen ${TK_ROOT}/tools/res_gen/main.c)
+res_bin_gen_config(resgen)
 
-#str_gen
-add_library(libstr_gen
-    ${TK_ROOT}/tools/str_gen/xml_str_gen.cc
-    ${TK_ROOT}/tools/str_gen/str_gen.cc
- )
-add_executable(str_gen ${TK_ROOT}/tools/str_gen/main.cc)
-tools_prop_config(libstr_gen str_gen)
+
 
 #qt_to_xml
 add_executable(qt_to_xml ${TK_ROOT}/tools/ui_gen/qt_to_xml/qt_to_xml.cc)
@@ -96,11 +102,12 @@ res_bin_gen_config(xml_to_ui)
 function(svg_gen_config binname)
     set_target_properties(${binname} PROPERTIES FOLDER "tools")
     target_include_directories(${binname} PRIVATE ${CPPPATH})
-    target_link_libraries(${binname} PRIVATE awtk libtheme_gen common)
+    target_link_libraries(${binname} PRIVATE awtk libthemegen common)
     set_target_properties(${binname} PROPERTIES
         LINK_FLAGS ${OS_LINKFLAGS} 
         LINK_FLAGS ${OS_SUBSYSTEM_CONSOLE}
     )
+    add_definitions(${OS_FLAGS} ${COMMON_CCFLAGS})
 endfunction(svg_gen_config)
 
 add_executable(bsvggen ${TK_ROOT}/tools/svg_gen/bsvg_gen.cc)

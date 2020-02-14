@@ -10,7 +10,7 @@ function(PRJ_CONFIG PRJ)
     # 引用目录
     target_include_directories(${PRJ} PRIVATE ${CPPPATH})
     #库目录
-    target_link_directories(${PRJ} PRIVATE ${TK_LIB_DIR})
+    #target_link_directories(${PRJ} PRIVATE ${TK_LIB_DIR})
     # 引用库
     target_link_libraries(${PRJ} PRIVATE assets awtk)
 

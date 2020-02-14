@@ -33,7 +33,7 @@ git clone https://github.com/zlgopen/awtk.git
 git clone https://github.com/zlgopen/awtk-examples.git
 ```
 
-#### 2. 克隆 awtk-virtualc
+#### 2. 克隆 awtk-msvc
 
 ```
 git clone https://github.com/zlgopen/awtk-msvc.git
@@ -50,9 +50,9 @@ git clone https://github.com/zlgopen/awtk-msvc.git
 ​	主要有4种模式，可根据需要自行修改：
 
 	@rem 设置渲染模式
-	@set NANOVG_TYPE=GLES2
+	@rem set NANOVG_TYPE=GLES2
 	@rem set NANOVG_TYPE=GLES3
-	@rem set NANOVG_TYPE=AGGE
+	@set NANOVG_TYPE=AGGE
 	@rem set NANOVG_TYPE=AGG
 > “rem”为批处理的注释符号，如需修改渲染模式，删去对应语句的“rem“即可。
 
@@ -86,4 +86,4 @@ git clone https://github.com/zlgopen/awtk-msvc.git
 
 ## 四、打开VS工程
 
-​	打开build文件夹，在文件夹中双击 awtk-msvc.sln 文件即可打开VS工程。
+​	打开build文件夹，双击 awtk-msvc.sln 文件即可打开VS工程。

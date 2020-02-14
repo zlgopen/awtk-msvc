@@ -33,6 +33,7 @@ foreach(bin ${BINS})
     #引用目录
     target_include_directories(${bin} PRIVATE ${INCLUDE_PATH})
     # 引用库
-    target_link_directories(${bin} PRIVATE ${TK_LIB_DIR})
-    target_link_libraries(${bin} PRIVATE assets libimage_gen libtheme_gen libfont_gen libstr_gen common awtk)
+    #target_link_directories(${bin} PRIVATE ${TK_LIB_DIR})
+    target_link_libraries(${bin} PRIVATE assets libimagegen libthemegen libfontgen libstrgen common awtk)
+    add_definitions(${OS_FLAGS} ${COMMON_CCFLAGS})
 endforeach()
