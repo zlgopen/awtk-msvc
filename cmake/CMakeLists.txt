@@ -1,17 +1,13 @@
-﻿# cmake最低版本
-cmake_minimum_required(VERSION 3.8)
+# cmake最低版本
+cmake_minimum_required(VERSION 3.7)
 
 # 启用IDE目录功能
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-# 包括模板
-include(CMakePrintHelpers)
-
-# 设置
+# 设置目录
 set(TK_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../awtk/lib)
 set(TK_BIN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../awtk/bin)
 set(TK_EXAMPLE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../awtk-examples)
-
 
 # 输出目录
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${TK_LIB_DIR})
@@ -100,21 +96,25 @@ endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     if(TOOLS_NAME STREQUAL " ")
-    set(OS_LIBS "gdi32" "user32" "winmm.lib" "imm32.lib" "version.lib" "shell32.lib" "ole32.lib" "Oleaut32.lib" "Advapi32.lib" "DelayImp.lib" "psapi.lib")
-        set(OS_FLAGS " -DWIN32 -D_WIN32 -DWINDOWS /EHsc -D_CONSOLE  /DDEBUG /Od  /FS /Z7 ")
+        set(OS_LIBS "gdi32" "user32" "winmm.lib" "imm32.lib" "version.lib" "shell32.lib" "ole32.lib" "Oleaut32.lib" "Advapi32.lib" "DelayImp.lib" "psapi.lib")
+        set(OS_FLAGS " -DWIN32 -D_WIN32 -DWINDOWS /EHsc -D_CONSOLE /DDEBUG /Od /FS /Z7 ")
         if(TARGET_ARCH STREQUAL "x86")
-            set(OS_FLAGS " ${OS_FLAGS} /MD ")
+            set(OS_FLAGS " ${OS_FLAGS} /MT ")
             set(OS_LINKFLAGS " /MACHINE:X86 /DEBUG ")
-            set(OS_SUBSYSTEM_CONSOLE "/SUBSYSTEM:CONSOLE,5.01")
-            set(OS_SUBSYSTEM_WINDOWS "/SUBSYSTEM:WINDOWS,5.01")
+            set(OS_SUBSYSTEM_CONSOLE "/SUBSYSTEM:CONSOLE,5.01 ")
+            set(OS_SUBSYSTEM_WINDOWS "/SUBSYSTEM:WINDOWS,5.01 ")
             set(COMMON_CCFLAGS " ${COMMON_CCFLAGS}  -D_WIN32 ")
         else()
-            set(OS_FLAGS " ${OS_FLAGS} -DWITH_64BIT_CPU ")
+            set(OS_FLAGS " ${OS_FLAGS} -DWITH_64BIT_CPU /MT ")
             set(OS_LINKFLAGS " /MACHINE:X64 /DEBUG ")
             set(OS_SUBSYSTEM_CONSOLE "/SUBSYSTEM:CONSOLE ")
             set(OS_SUBSYSTEM_WINDOWS "/SUBSYSTEM:WINDOWS ")
             set(COMMON_CCFLAGS " ${COMMON_CCFLAGS}  -D_WIN64 ")
         endif()
+        foreach(flag_var CMAKE_C_FLAGS CMAKE_CXX_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_CXX_FLAGS_DEBUG)
+            string(REPLACE "/RTC1" " " ${flag_var} "${${flag_var}}")
+            string(REPLACE "/W3" " " ${flag_var} "${${flag_var}}")
+        endforeach(flag_var)
     elseif(TOOLS_NAME STREQUAL "mingw")
         set(OS_LIBS " kernel32  gdi32  user32  winmm imm32 version shell32 ole32 Oleaut32 Advapi32 oleaut32 uuid stdc++ ")
         set(OS_FLAGS " -DWINDOWS -D_CONSOLE -g -Wall ")
@@ -122,8 +122,8 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
         set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_DOUBLE_FLOAT -DUNICODE")
     endif()
     set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DSDL_REAL_API -DSDL_HAPTIC_DISABLED -DSDL_SENSOR_DISABLED -DSDL_JOYSTICK_DISABLED ")
-    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_CONSTANT_MACROS -D_HAS_EXCEPTIONS=0 -D_HAS_ITERATOR_DEBUGGING=0 -D_ITERATOR_DEBUG_LEVEL=0 -D_SCL_SECURE=0 ")
-    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -D_SECURE_SCL=0 -D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_DEPRECATE ")
+    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_CONSTANT_MACROS -D_HAS_EXCEPTIONS=0 -D_HAS_ITERATOR_DEBUGGING=0 -D_ITERATOR_DEBUG_LEVEL=0 -D_SCL_SECURE=0")
+    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -D_SECURE_SCL=0 -D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_DEPRECATE ")
 endif()
 
 #所有源文件
@@ -191,12 +191,14 @@ set(SOURCE_FILES ${SOURCE_FILES}
 
 #添加miniz源文件
 set(MINIZ ${TK_ROOT}/3rd/miniz)
-set(SOURCE_FILES ${SOURCE_FILES}        
+set(MINIZ_SRC       
     ${MINIZ}/miniz.c
     ${MINIZ}/miniz_tdef.c
     ${MINIZ}/miniz_tinfl.c
     ${MINIZ}/miniz_zip.c
 )
+set(SOURCE_FILES ${SOURCE_FILES} ${MINIZ_SRC})
+
 
 #添加awtk内核代码
 file(GLOB AWTK_SRC 
@@ -352,10 +354,9 @@ set(SOURCE_FILES ${SOURCE_FILES} ${SDL_SRC})
 add_library(${PROJ} STATIC ${SOURCE_FILES})
 set_target_properties(${PROJ} PROPERTIES FOLDER "lib")
 target_link_libraries(${PROJ} ${OS_LIBS})
-# add_compile_options(${COMMON_CFLAGS})
+add_compile_options(${COMMON_CFLAGS})
 set_target_properties(${PROJ} PROPERTIES STATIC_LABRARY_FLAGS ${OS_LINKFLAGS} STATIC_LABRARY_FLAGS ${OS_SUBSYSTEM_CONSOLE})
 add_definitions(${OS_FLAGS} ${COMMON_CCFLAGS})
-
 
 #添加包含路径
 set(CPPPATH 
@@ -369,7 +370,6 @@ set(CPPPATH
     ${TK_ROOT}/3rd/nanovg/gl 
     ${TK_ROOT}/3rd/nanovg/base 
     ${TK_ROOT}/3rd/nanovg/agge 
-    ${TK_ROOT}/3rd/nanovg/bgfx 
     ${TK_ROOT}/3rd/SDL/src 
     ${TK_ROOT}/3rd/SDL/include
     ${TK_ROOT}/3rd/SDL/src/video/khronos

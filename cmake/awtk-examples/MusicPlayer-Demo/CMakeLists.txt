@@ -25,11 +25,3 @@ target_include_directories(${PRJ} PRIVATE ${CPPPATH})
 
 # 引用库
 target_link_libraries(${PRJ} PRIVATE awtk)
-
-add_definitions(${OS_FLAGS} ${COMMON_CCFLAGS})
-
-# #设置LCD屏幕为480*272
-# set(LCD_FLAG " -DLCD_W=480 -DLCD_H=272")
-# add_definitions(${LCD_FLAG})
-
-

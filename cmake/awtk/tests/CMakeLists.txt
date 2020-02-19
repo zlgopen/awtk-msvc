@@ -32,8 +32,6 @@ foreach(bin ${BINS})
     set_target_properties(${bin} PROPERTIES LINK_FLAGS ${OS_LINKFLAGS} LINK_FLAGS ${OS_SUBSYSTEM_CONSOLE})
     #引用目录
     target_include_directories(${bin} PRIVATE ${INCLUDE_PATH})
-    # 引用库
-    #target_link_directories(${bin} PRIVATE ${TK_LIB_DIR})
-    target_link_libraries(${bin} PRIVATE assets libimagegen libthemegen libfontgen libstrgen common awtk)
-    add_definitions(${OS_FLAGS} ${COMMON_CCFLAGS})
+    #链接库
+    target_link_libraries(${bin} PRIVATE assets image_gen theme_gen font_gen str_gen common awtk)
 endforeach()
