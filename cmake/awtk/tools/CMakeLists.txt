@@ -16,10 +16,7 @@ function(tools_prop_config libname binname)
         awtk
     )
     target_include_directories(${binname} PRIVATE ${CPPPATH})
-    set_target_properties(${binname} PROPERTIES
-        LINK_FLAGS ${OS_LINKFLAGS} 
-        LINK_FLAGS ${OS_SUBSYSTEM_CONSOLE}
-    ) 
+    set_target_properties(${binname} PROPERTIES LINK_FLAGS ${OS_SUBSYSTEM_CONSOLE}) 
 endfunction(tools_prop_config)
 
 #theme_gen
@@ -64,10 +61,7 @@ foreach(bin ${bin_list})
     endif()
     set_target_properties(${bin} PROPERTIES FOLDER "tools")
     target_include_directories(${bin} PRIVATE ${CPPPATH})
-    set_target_properties(${bin} PROPERTIES
-        LINK_FLAGS ${OS_LINKFLAGS} 
-        LINK_FLAGS ${OS_SUBSYSTEM_CONSOLE}
-    )    
+    set_target_properties(${bin} PROPERTIES LINK_FLAGS ${OS_SUBSYSTEM_CONSOLE})    
 endforeach(bin)
 
 #res_gen
@@ -75,10 +69,7 @@ function(res_bin_gen_config binname)
     set_target_properties(${binname} PROPERTIES FOLDER "tools")
     target_include_directories(${binname} PRIVATE ${CPPPATH})
     target_link_libraries(${binname} PRIVATE awtk common)
-    set_target_properties(${binname} PROPERTIES
-        LINK_FLAGS ${OS_LINKFLAGS}
-        LINK_FLAGS ${OS_SUBSYSTEM_CONSOLE}
-    )     
+    set_target_properties(${binname} PROPERTIES LINK_FLAGS ${OS_SUBSYSTEM_CONSOLE})     
 endfunction(res_bin_gen_config)
 
 add_executable(resgen ${TK_ROOT}/tools/res_gen/main.c)
@@ -97,10 +88,7 @@ function(svg_gen_config binname)
     set_target_properties(${binname} PROPERTIES FOLDER "tools")
     target_include_directories(${binname} PRIVATE ${CPPPATH})
     target_link_libraries(${binname} PRIVATE awtk theme_gen common)
-    set_target_properties(${binname} PROPERTIES
-        LINK_FLAGS ${OS_LINKFLAGS} 
-        LINK_FLAGS ${OS_SUBSYSTEM_CONSOLE}
-    )  
+    set_target_properties(${binname} PROPERTIES LINK_FLAGS ${OS_SUBSYSTEM_CONSOLE})  
 endfunction(svg_gen_config)
 
 add_executable(bsvggen ${TK_ROOT}/tools/svg_gen/bsvg_gen.cc)

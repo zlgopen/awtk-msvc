@@ -8,7 +8,7 @@ set(PRJ HelloWorld.Max-Demo)
 add_executable(${PRJ} "")
 target_sources(${PRJ} PRIVATE ${DEMOPATH}/src/app_main.c ${DEMOPATH}/src/window_main.c)
 set_target_properties(${PRJ} PROPERTIES FOLDER "examples")
-set_target_properties(${PRJ} PROPERTIES LINK_FLAGS ${OS_LINKFLAGS} LINK_FLAGS ${OS_SUBSYSTEM_WINDOWS})
+set_target_properties(${PRJ} PROPERTIES  LINK_FLAGS ${OS_SUBSYSTEM_WINDOWS})
 
 # 引用目录
 target_include_directories(${PRJ} PRIVATE ${CPPPATH})

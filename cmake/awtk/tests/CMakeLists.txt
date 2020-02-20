@@ -29,7 +29,7 @@ set(BINS runTest mem_test recycle_test)
 foreach(bin ${BINS})
     set_target_properties(${bin} PROPERTIES FOLDER "tests")
     #链接属性
-    set_target_properties(${bin} PROPERTIES LINK_FLAGS ${OS_LINKFLAGS} LINK_FLAGS ${OS_SUBSYSTEM_CONSOLE})
+    set_target_properties(${bin} PROPERTIES  LINK_FLAGS ${OS_SUBSYSTEM_CONSOLE})
     #引用目录
     target_include_directories(${bin} PRIVATE ${INCLUDE_PATH})
     #链接库
