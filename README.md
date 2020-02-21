@@ -16,13 +16,13 @@
 
 2. 到如下图步骤时，选中【add CMake to the system PATH for all users】和【Create CMake Desktop Icon】
 
-   ![AddPath](docs\images\AddPath.png)
+   ![AddPath](docs/images/AddPath.png)
 
 3. 再一路点击【next】，并最后点击【install】
 
 4. 等待安装结束后，点击【Finish】
 
-   ![finish](docs\images\finish.png)
+   ![finish](docs/images/finish.png)
 
 ## 二、环境配置
 
@@ -76,7 +76,7 @@ git clone https://github.com/zlgopen/awtk-msvc.git
 
 ​	VS_PLATFORM 参数取值可参考下图：
 
-![generator](docs\images\generator.png)
+![generator](docs/images/generator.png)
 
 > 在终端上运行 cmake --help ，可得到上图输出结果。
 
