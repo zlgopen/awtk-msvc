@@ -84,9 +84,7 @@ git clone https://github.com/zlgopen/awtk-msvc.git
 
 ```
 @rem 禁用部分警告
-@set DISABLED_WARNING_4244 = ON
-@set DISABLED_WARNING_4267 = ON
-@set DISABLED_WARNING_4018 = ON
+@set DISABLE_WARNING=ON
 ```
 
 ​	工程默认禁用C4244、C4267及C4018警告，用户可自行开启警告。
