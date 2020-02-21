@@ -8,6 +8,11 @@
 @rem set NANOVG_TYPE=GLES3
 @rem set NANOVG_TYPE=AGG
 
+@rem 禁用部分警告
+@set DISABLED_WARNING_4244 = ON
+@set DISABLED_WARNING_4267 = ON
+@set DISABLED_WARNING_4018 = ON
+
 @rem 设置启用谷歌拼音
 @set PINYIN_ENABLE=ON
 
@@ -15,3 +20,4 @@
 @set VS_GENERATOR="Visual Studio 14 Win64"
 
 cmake -DNANOVG_BACKEND=%NANOVG_TYPE% -DGPINYIN_ENABLE=%PINYIN_ENABLE% -G %VS_GENERATOR% ../cmake
+pause
