@@ -16,18 +16,7 @@ endfunction()
 set(DEMOPATH ${TK_ROOT}/demos)
 
 #assets
-find_file(ASSETS_DEFAULT assets_default.c PATHS ${DEMOPATH})
-find_file(ASSETS_DARK assets_dark.c PATHS ${DEMOPATH})
-
-set(ASSETS_SRC ${DEMOPATH}/assets.c)
-if(ASSETS_DEFAULT)
-    set(ASSETS_SRC ${ASSETS_SRC} ${DEMOPATH}/assets_default.c)
-endif(ASSETS_DEFAULT)
-if(ASSETS_DARK)
-    set(ASSETS_SRC ${ASSETS_SRC} ${DEMOPATH}/assets_dark.c)
-endif(ASSETS_DARK)
-
-add_library(assets STATIC ${ASSETS_SRC})
+add_library(assets STATIC ${DEMOPATH}/assets.c)
 set_target_properties(assets PROPERTIES FOLDER "lib")
 target_include_directories(assets PRIVATE ${CPPPATH})
 
