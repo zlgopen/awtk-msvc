@@ -62,7 +62,7 @@ set(TOOLS_NAME " ")
 
 set(COMMON_CCFLAGS "-DTK_ROOT=\\\"${TK_ROOT}\\\"")
 set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_ASSET_LOADER -DWITH_FS_RES -DWITH_ASSET_LOADER_ZIP ")
-set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DSTBTT_STATIC -DSTB_IMAGE_STATIC -DWITH_STB_IMAGE -DWITH_SOCKET ")
+set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DSTBTT_STATIC -DSTB_IMAGE_STATIC -DWITH_STB_IMAGE ")
 set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_VGCANVAS -DWITH_UNICODE_BREAK -DWITH_DESKTOP_STYLE ")
 set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DSDL2 -DHAS_STD_MALLOC -DWITH_SDL -DHAS_STDIO -DHAVE_STDIO_H ")
 
@@ -365,6 +365,14 @@ add_compile_options(${COMMON_CFLAGS})
 set_target_properties(${PROJ} PROPERTIES STATIC_LABRARY_FLAGS  ${OS_SUBSYSTEM_CONSOLE})
 add_definitions(${OS_FLAGS} ${COMMON_CCFLAGS})
 
+#add cjson
+find_file(CJSON cJSON.c ${TK_ROOT}/3rd/cjson)
+if(CJSON)
+    aux_source_directory(${TK_ROOT}/3rd/cjson CJSON_SRC)
+    add_library(cjson STATIC ${CJSON_SRC})
+    set_target_properties(cjson PROPERTIES FOLDER "lib")
+endif(CJSON)
+
 #添加包含路径
 set(CPPPATH 
     ${TK_ROOT}/src
@@ -372,7 +380,8 @@ set(CPPPATH
     ${TK_ROOT}/src/ext_widgets 
     ${TK_ROOT}/3rd/pixman 
     ${TK_ROOT}/3rd/agge 
-    ${TK_ROOT}/3rd/agg/include 
+    ${TK_ROOT}/3rd/agg/include
+    ${TK_ROOT}/3rd/cjson
     ${TK_ROOT}/3rd/nanovg 
     ${TK_ROOT}/3rd/nanovg/gl 
     ${TK_ROOT}/3rd/nanovg/base 
