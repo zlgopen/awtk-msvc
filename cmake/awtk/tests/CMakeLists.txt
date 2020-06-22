@@ -20,11 +20,10 @@ set(INCLUDE_PATH
 )
 
 add_executable(runTest ${SRC})
-add_executable(mem_test ${TESTS_DIR}/mem_test.cpp)
 add_executable(recycle_test ${TESTS_DIR}/recycle_test.cpp)
 
 
-set(BINS runTest mem_test recycle_test)
+set(BINS runTest recycle_test)
 
 foreach(bin ${BINS})
     set_target_properties(${bin} PROPERTIES FOLDER "tests")
