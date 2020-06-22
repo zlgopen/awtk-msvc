@@ -220,6 +220,7 @@ file(GLOB AWTK_SRC
     ${TK_ROOT}/src/image_loader/*.c
     ${TK_ROOT}/src/designer_support/*.c
     ${TK_ROOT}/src/widget_animators/*.c
+    ${TK_ROOT}/src/conf_io/*.c
     ${TK_ROOT}/src/misc/*.c
     ${TK_ROOT}/src/window_animators/*.c
     ${TK_ROOT}/src/dialog_highlighters/*.c
