@@ -64,7 +64,7 @@ set(COMMON_CCFLAGS "-DTK_ROOT=\\\"${TK_ROOT}\\\"")
 set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_ASSET_LOADER -DWITH_FS_RES -DWITH_ASSET_LOADER_ZIP -DWITH_IME_PINYIN")
 set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DSTBTT_STATIC -DSTB_IMAGE_STATIC -DWITH_STB_IMAGE ")
 set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_VGCANVAS -DWITH_UNICODE_BREAK -DWITH_DESKTOP_STYLE ")
-set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DSDL2 -DHAS_STD_MALLOC -DWITH_SDL -DHAS_STDIO -DHAVE_STDIO_H ")
+set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DSDL2 -DHAS_STD_MALLOC -DWITH_SDL -DHAS_STDIO -DHAVE_STDIO_H -DHAS_GET_TIME_US64 ")
 
 set(GRAPHIC_BUFFER "default")
 
@@ -285,6 +285,7 @@ file(GLOB SRC_SRC
     ${TK_ROOT}/src/awtk_global.c
     ${TK_ROOT}/src/widgets/*.c
     ${TK_ROOT}/src/tkc/*.c
+    ${TK_ROOT}/src/fscript_ext/*.c
     ${TK_ROOT}/src/platforms/pc/*.c
     ${TK_ROOT}/src/ext_widgets/*.c
     ${TK_ROOT}/src/ext_widgets/*/*.c
@@ -405,13 +406,8 @@ add_subdirectory(awtk/demos)
 #编译tools
 add_subdirectory(awtk/tools)
 #编译tests
-add_subdirectory(awtk/tests)
+#add_subdirectory(awtk/tests)
 
 #编译example
-add_subdirectory(awtk-examples/HelloWorld.Xml-Demo)
-add_subdirectory(awtk-examples/HelloWorld.Max-Demo)
-add_subdirectory(awtk-examples/Chart-Demo)
-add_subdirectory(awtk-examples/CleanAir-Demo)
 add_subdirectory(awtk-examples/HelloDesigner-Demo)
-add_subdirectory(awtk-examples/MusicPlayer-Demo)
-add_subdirectory(awtk-examples/SmartWatch-Demo)
+add_subdirectory(awtk-examples/HelloWorld.Xml-Demo)

@@ -75,10 +75,6 @@ endfunction(res_bin_gen_config)
 add_executable(resgen ${TK_ROOT}/tools/res_gen/main.c)
 res_bin_gen_config(resgen)
 
-#qt_to_xml
-add_executable(qt_to_xml ${TK_ROOT}/tools/ui_gen/qt_to_xml/qt_to_xml.cc)
-res_bin_gen_config(qt_to_xml)
-
 #xml_to_ui
 add_executable(xml_to_ui ${TK_ROOT}/tools/ui_gen/xml_to_ui/xml_to_ui.c)
 res_bin_gen_config(xml_to_ui)
