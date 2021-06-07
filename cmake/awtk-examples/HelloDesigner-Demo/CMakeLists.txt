@@ -10,7 +10,7 @@ file(GLOB SOURCE_FILES  ${SRC}/*.c)
 
 add_executable(${PRJ} ${SOURCE_FILES})
 set_target_properties(${PRJ} PROPERTIES FOLDER "examples")
-set_target_properties(${PRJ} PROPERTIES  LINK_FLAGS ${OS_SUBSYSTEM_WINDOWS})
+set_target_properties(${PRJ} PROPERTIES LINK_FLAGS ${OS_SUBSYSTEM_WINDOWS})
 
 # 设置窗口大小
 target_compile_definitions(${PRJ} PRIVATE -DLCD_WIDTH=800 -DLCD_HEIGHT=480)

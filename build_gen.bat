@@ -5,8 +5,6 @@
 @rem 设置渲染模式
 @set NANOVG_TYPE=AGGE
 @rem set NANOVG_TYPE=GLES2
-@rem set NANOVG_TYPE=GLES3
-@rem set NANOVG_TYPE=AGG
 
 @rem 设置启用谷歌拼音
 @set PINYIN_ENABLE=ON

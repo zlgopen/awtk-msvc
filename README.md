@@ -47,13 +47,11 @@ git clone https://github.com/zlgopen/awtk-msvc.git
 
 ##### 1.1 设置渲染模式
 
-​	主要有4种模式，可根据需要自行修改：
+​	可根据需要自行修改：
 
 	@rem 设置渲染模式
 	@set NANOVG_TYPE=AGGE
 	@rem set NANOVG_TYPE=GLES2
-	@rem set NANOVG_TYPE=GLES3
-	@rem set NANOVG_TYPE=AGG
 > “rem”为批处理的注释符号，如需修改渲染模式，删去对应语句的“rem“即可。
 
 ##### 1.2  设置启用谷歌拼音
@@ -63,7 +61,16 @@ git clone https://github.com/zlgopen/awtk-msvc.git
 	@rem 设置启用谷歌拼音
 	@set PINYIN_ENABLE=ON
 
-##### 1.3 设置VS平台
+##### 1.3 禁用部分警告
+
+```
+@rem 禁用部分警告
+@set DISABLE_WARNING=ON
+```
+
+​	工程默认禁用C4244、C4267及C4018警告，用户可自行开启警告。
+
+##### 1.4 设置VS平台
 
 ​	可根据用户安装的VS版本（vs2015或以上），自行修改VS平台：
 
@@ -79,15 +86,6 @@ git clone https://github.com/zlgopen/awtk-msvc.git
 ![generator](docs/images/generator.png)
 
 > 在终端上运行 cmake --help ，可得到上图输出结果。
-
-##### 1.4 禁用部分警告
-
-```
-@rem 禁用部分警告
-@set DISABLE_WARNING=ON
-```
-
-​	工程默认禁用C4244、C4267及C4018警告，用户可自行开启警告。
 
 #### 2. 执行 build_gen.bat 文件
 

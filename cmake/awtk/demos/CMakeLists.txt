@@ -20,7 +20,6 @@ add_library(assets STATIC ${DEMOPATH}/assets.c)
 set_target_properties(assets PROPERTIES FOLDER "lib")
 target_include_directories(assets PRIVATE ${CPPPATH})
 
-
 #find demo_main
 find_file(DEMO_MAIN_EXISTS demo_main.c PATHS ${DEMOPATH})
 if(DEMO_MAIN_EXISTS)
@@ -85,14 +84,12 @@ target_sources(${PRJ} PRIVATE ${DEMOPATH}/preview_ui.c)
 set_target_properties(${PRJ} PROPERTIES FOLDER "demos")
 PRJ_CONFIG(${PRJ})
 
-
 #DemoDesktop
 set(PRJ demo_desktop)
 add_executable(${PRJ} "")
 target_sources(${PRJ} PRIVATE ${DEMOPATH}/demo_desktop.c)
 set_target_properties(${PRJ} PROPERTIES FOLDER "demos")
 PRJ_CONFIG(${PRJ})
-
 
 #DemoFile
 find_file(FILE_BROWSER_EXISTS demo_file_browser.c PATHS ${DEMOPATH})
@@ -103,11 +100,3 @@ if(FILE_BROWSER_EXISTS)
     set_target_properties(${PRJ} PROPERTIES FOLDER "demos")
     PRJ_CONFIG(${PRJ})
 endif(FILE_BROWSER_EXISTS)
-
-
-
-
-
-
-
-

@@ -6,6 +6,7 @@ file(GLOB SRC
     ${TESTS_DIR}/*.cc
     ${TESTS_DIR}/*.c
 )
+
 set(INCLUDE_PATH 
     ${TK_ROOT}
     ${GTEST_ROOT}
@@ -21,7 +22,6 @@ set(INCLUDE_PATH
 
 add_executable(runTest ${SRC})
 add_executable(recycle_test ${TESTS_DIR}/recycle_test.cpp)
-
 
 set(BINS runTest recycle_test)
 

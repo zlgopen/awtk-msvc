@@ -34,7 +34,7 @@ if (DISABLE_WARNING)
     set(DISABLE_WARNING_FLAGS "/wd4018 /wd4244 /wd4267")
 endif(DISABLE_WARNING)
 
-#设置是否启用谷歌拼音
+# 设置是否启用谷歌拼音
 set(GPINYIN_ENABLE ON CACHE BOOL "")
 if (GPINYIN_ENABLE)
     set(INPUT_ENGINE "pinyin")
@@ -42,11 +42,13 @@ else()
     set(INPUT_ENGINE "null")
 endif(GPINYIN_ENABLE)
 
+# 设置显示驱动
+set(NATIVE_WINDOW "sdl")
+set(VGCANVAS "NANOVG")
 set(NANOVG_BACKEND "AGGE" CACHE STRING "")
-set_property(CACHE NANOVG_BACKEND PROPERTY STRINGS "AGGE" "GLES2" "GLES3" "AGG")
+set_property(CACHE NANOVG_BACKEND PROPERTY STRINGS "AGGE" "GLES2")
 
-
-if (NANOVG_BACKEND STREQUAL "AGGE" OR NANOVG_BACKEND STREQUAL "AGG")
+if (NANOVG_BACKEND STREQUAL "AGGE")
     set(LCD "SDL_FB")
     set(FRAME_BUFFER_FORMAT "bgr565")
     # set(FRAME_BUFFER_FORMAT "bgra8888")
@@ -55,180 +57,108 @@ else()
 endif()
 # set(LCD "SDL_FB_MONO")
 
-set(NATIVE_WINDOW "sdl")
 
-set(TOOLS_NAME " ")
-# set(TOOLS_NAME "mingw")
+### 构建编译参数
 
-set(COMMON_CCFLAGS "-DTK_ROOT=\\\"${TK_ROOT}\\\"")
-set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_ASSET_LOADER -DWITH_FS_RES -DWITH_ASSET_LOADER_ZIP -DWITH_IME_PINYIN")
+set(COMMON_CCFLAGS " -DTK_ROOT=\\\"${TK_ROOT}\\\" ")
+#set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITHOUT_WINDOW_ANIMATOR_CACHE=1 ")
+#set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DENABLE_PERFORMANCE_PROFILE=1 ")
+#set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DNATIVE_WINDOW_BORDERLESS=1 ")
+#set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DNATIVE_WINDOW_NOT_RESIZABLE=1 ")
+#set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DENABLE_MEM_LEAK_CHECK=1 ")
+
+set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_MBEDTLS=1 ")
+set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DENABLE_CURSOR=1 ")
+set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_TEXT_BIDI=1 ")
+#set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DLOAD_ASSET_WITH_MMAP=1 ")
+set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_DATA_READER_WRITER=1 ")
+set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_EVENT_RECORDER_PLAYER=1 ")
+set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_ASSET_LOADER -DWITH_FS_RES -DWITH_ASSET_LOADER_ZIP ")
 set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DSTBTT_STATIC -DSTB_IMAGE_STATIC -DWITH_STB_IMAGE ")
 set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_VGCANVAS -DWITH_UNICODE_BREAK -DWITH_DESKTOP_STYLE ")
-set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DSDL2 -DHAS_STD_MALLOC -DWITH_SDL -DHAS_STDIO -DHAVE_STDIO_H -DHAS_GET_TIME_US64 ")
+set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_SDL -DHAS_STDIO -DHAVE_STDIO_H -DHAS_GET_TIME_US64 ")
+set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DHAS_STD_MALLOC -DTK_MAX_MEM_BLOCK_NR=3 ")
 
-set(GRAPHIC_BUFFER "default")
-
-#only for c compiler flags
-set(COMMON_CFLAGS " ")
+if (INPUT_ENGINE STREQUAL "pinyin")
+    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_IME_PINYIN ")
+else()
+    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_IME_NULL ")
+endif()
 
 if (LCD STREQUAL "SDL_GPU")
-    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS}  -DWITH_NANOVG_GPU -DWITH_VGCANVAS_LCD ")
-    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS}  -DWITH_STB_FONT ")
+    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_NANOVG_GPU -DWITH_VGCANVAS_LCD ")
+    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_STB_FONT ")
 elseif (LCD STREQUAL "SDL_FB_MONO")
     set(NANOVG_BACKEND "AGGE")
-    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS}  -DWITH_LCD_MONO -DWITH_NANOVG_SOFT ")
-    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS}  -DWITH_FT_FONT ")
+    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_LCD_MONO -DWITH_NANOVG_SOFT ")
+    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_STB_FONT ")
 else()
-    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS}  -DWITH_STB_FONT ")
-    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS}  -DWITH_BITMAP_BGRA -DWITH_NANOVG_SOFT ")
+    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_STB_FONT ")
+    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_BITMAP_BGRA -DWITH_NANOVG_SOFT ")
     if (FRAME_BUFFER_FORMAT STREQUAL "bgra8888")
-        set(COMMON_CCFLAGS " ${COMMON_CCFLAGS}  -DWITH_FB_BGRA8888=1 ")
+        set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_FB_BGRA8888=1 ")
     else()
-        set(COMMON_CCFLAGS " ${COMMON_CCFLAGS}  -DWITH_FB_BGR565=1 ")
+        set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_FB_BGR565=1 ")
     endif()
 endif()
 
-
-if (NANOVG_BACKEND STREQUAL "AGG")
-    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS}  -DWITH_NANOVG_AGG ")
-elseif (NANOVG_BACKEND STREQUAL "AGGE")
-    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS}  -DWITH_NANOVG_AGGE ")
-elseif (NANOVG_BACKEND STREQUAL "GLES2")
-    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS}  -DWITH_NANOVG_GLES2 -DWITH_NANOVG_GL ")
-elseif (NANOVG_BACKEND STREQUAL "GLES3")
-    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS}  -DWITH_NANOVG_GLES3 -DWITH_NANOVG_GL ")
+if (NANOVG_BACKEND STREQUAL "AGGE")
+    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_NANOVG_AGGE ")
 else()
-    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS}  -DWITH_NANOVG_GL3 -DWITH_NANOVG_GL ")
+    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_NANOVG_GLES2 -DWITH_NANOVG_GL ")
 endif()
 
 if (CMAKE_SYSTEM_NAME MATCHES "Windows")
-    if (TOOLS_NAME STREQUAL " ")
-        set(OS_LIBS "gdi32" "user32" "winmm.lib" "imm32.lib" "version.lib" "shell32.lib" "ole32.lib" "Oleaut32.lib" "Advapi32.lib" "DelayImp.lib" "psapi.lib")
-        set(OS_FLAGS " -DWIN32 -D_WIN32 -DWINDOWS /EHsc -D_CONSOLE /FS /Z7 ")
-        set(OS_FLAGS "${OS_FLAGS} ${DISABLE_WARNING_FLAGS}")
-        if (TARGET_ARCH STREQUAL "x86")
-            set(OS_SUBSYSTEM_CONSOLE "/SUBSYSTEM:CONSOLE,5.01 ")
-            set(OS_SUBSYSTEM_WINDOWS "/SUBSYSTEM:WINDOWS,5.01 ")
-            set(COMMON_CCFLAGS " ${COMMON_CCFLAGS}  -D_WIN32 ")
-        else()
-            set(OS_FLAGS " ${OS_FLAGS} -DWITH_64BIT_CPU ")
-            set(OS_SUBSYSTEM_CONSOLE "/SUBSYSTEM:CONSOLE ")
-            set(OS_SUBSYSTEM_WINDOWS "/SUBSYSTEM:WINDOWS ")
-            set(COMMON_CCFLAGS " ${COMMON_CCFLAGS}  -D_WIN64 ")
-        endif()
-        foreach(flag_var  CMAKE_C_FLAGS_DEBUG CMAKE_CXX_FLAGS_DEBUG)
-            string(REPLACE "/MDd" "/MTd" ${flag_var} "${${flag_var}}")
-        endforeach(flag_var)
-        foreach(flag_var  CMAKE_C_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELEASE)
-            string(REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-        endforeach(flag_var)
-    elseif (TOOLS_NAME STREQUAL "mingw")
-        set(OS_LIBS " kernel32  gdi32  user32  winmm imm32 version shell32 ole32 Oleaut32 Advapi32 oleaut32 uuid stdc++ ")
-        set(OS_FLAGS " -DWINDOWS -D_CONSOLE -g -Wall ")
-        set(COMMON_CFLAGS "${COMMON_CFLAGS} -std=gnu99")
-        set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_DOUBLE_FLOAT -DUNICODE")
+    set(OS_LIBS "gdi32" "user32" "winmm.lib" "imm32.lib" "version.lib" "shell32.lib" "ole32.lib" "Oleaut32.lib" "Advapi32.lib" "DelayImp.lib" "psapi.lib")
+    set(OS_FLAGS " -DWIN32 -D_WIN32 -DWINDOWS /EHsc -D_CONSOLE /FS /Z7 ")
+    set(OS_FLAGS "${OS_FLAGS} ${DISABLE_WARNING_FLAGS}")
+    if (TARGET_ARCH STREQUAL "x86")
+        set(OS_SUBSYSTEM_CONSOLE "/SUBSYSTEM:CONSOLE,5.01 ")
+        set(OS_SUBSYSTEM_WINDOWS "/SUBSYSTEM:WINDOWS,5.01 ")
+        set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -D_WIN32 ")
+    else()
+        set(OS_FLAGS " ${OS_FLAGS} -DWITH_64BIT_CPU ")
+        set(OS_SUBSYSTEM_CONSOLE "/SUBSYSTEM:CONSOLE ")
+        set(OS_SUBSYSTEM_WINDOWS "/SUBSYSTEM:WINDOWS ")
+        set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -D_WIN64 ")
     endif()
+
     set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DSDL_REAL_API -DSDL_HAPTIC_DISABLED -DSDL_SENSOR_DISABLED -DSDL_JOYSTICK_DISABLED ")
     set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_CONSTANT_MACROS -D_HAS_EXCEPTIONS=0 -D_HAS_ITERATOR_DEBUGGING=0 -D_ITERATOR_DEBUG_LEVEL=0 -D_SCL_SECURE=0")
     set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -D_SECURE_SCL=0 -D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_DEPRECATE ")
 endif()
 
-#所有源文件
+
+### 所有源文件
+
 set(SOURCE_FILES "") 
 
-#添加agge源文件
-if (NANOVG_BACKEND STREQUAL "AGG")
-    set(AGG_ROOT ${TK_ROOT}/3rd/agg)
-    aux_source_directory(${AGG_ROOT}/src SRC)
+# 添加nanovg源文件
+set(NANOVG ${TK_ROOT}/3rd/nanovg)
+aux_source_directory(${NANOVG}/base SRC)
+set(SOURCE_FILES ${SOURCE_FILES} ${SRC})
+if (NANOVG_BACKEND STREQUAL "AGGE")
+    aux_source_directory(${NANOVG}/agge SRC)
     set(SOURCE_FILES ${SOURCE_FILES} ${SRC})
-elseif (NANOVG_BACKEND STREQUAL "AGGE")
+endif()
+
+# 添加agge源文件
+if (NANOVG_BACKEND STREQUAL "AGGE")
     set(AGGE_ROOT ${TK_ROOT}/3rd/agge)
     aux_source_directory(${AGGE_ROOT}/agge SRC)
     set(SOURCE_FILES ${SOURCE_FILES} ${SRC})
 endif()
 
-
-#添加nanovg源文件
-set(NANOVG ${TK_ROOT}/3rd/nanovg)
-aux_source_directory(${NANOVG}/base SRC)
-set(SOURCE_FILES ${SOURCE_FILES} ${SRC})
-if (NANOVG_BACKEND STREQUAL "AGG")
-    aux_source_directory(${NANOVG}/agg SRC)
-    set(SOURCE_FILES ${SOURCE_FILES} ${SRC})
-elseif (NANOVG_BACKEND STREQUAL "AGGE")
-    aux_source_directory(${NANOVG}/agge SRC)
-    set(SOURCE_FILES ${SOURCE_FILES} ${SRC})
+if (NANOVG_BACKEND STREQUAL AGGE)
+    set(SOURCE_FILES ${SOURCE_FILES} ${TK_ROOT}/src/vgcanvas/vgcanvas_nanovg_soft.c)
+else()
+    set(SOURCE_FILES ${SOURCE_FILES} ${TK_ROOT}/src/vgcanvas/vgcanvas_nanovg_gl.c)
 endif()
 
-#添加glad源文件
+# 添加glad源文件
 set(GLAD ${TK_ROOT}/3rd/glad)
 aux_source_directory(${GLAD} SRC)
 set(SOURCE_FILES ${SOURCE_FILES} ${SRC})
-
-
-#添加gpinyin源文件
-set(GPINYIN ${TK_ROOT}/3rd/gpinyin)
-aux_source_directory(${GPINYIN}/src SRC)
-set(SOURCE_FILES ${SOURCE_FILES} ${SRC})
-
-
-#添加linebreak源文件
-set(LIBUNIBREAK ${TK_ROOT}/3rd/libunibreak)
-set(SOURCE_FILES ${SOURCE_FILES}        
-    ${LIBUNIBREAK}/graphemebreak.c
-    ${LIBUNIBREAK}/linebreak.c
-    ${LIBUNIBREAK}/linebreakdef.c
-    ${LIBUNIBREAK}/unibreakbase.c
-    ${LIBUNIBREAK}/unibreakdef.c
-    ${LIBUNIBREAK}/wordbreak.c
-    ${LIBUNIBREAK}/emojidef.c
-    ${LIBUNIBREAK}/linebreakdata.c
-)
-
-
-#添加lz4源文件
-set(LZ4 ${TK_ROOT}/3rd/lz4)
-set(SOURCE_FILES ${SOURCE_FILES}        
-    ${LZ4}/lz4.c
-    ${LZ4}/lz4frame.c
-    ${LZ4}/lz4hc.c
-    ${LZ4}/xxhash.c
-)
-
-
-#添加miniz源文件
-set(MINIZ ${TK_ROOT}/3rd/miniz)
-set(MINIZ_SRC       
-    ${MINIZ}/miniz.c
-    ${MINIZ}/miniz_tdef.c
-    ${MINIZ}/miniz_tinfl.c
-    ${MINIZ}/miniz_zip.c
-)
-set(SOURCE_FILES ${SOURCE_FILES} ${MINIZ_SRC})
-
-
-#添加awtk内核代码
-file(GLOB AWTK_SRC 
-    ${TK_ROOT}/src/layouters/*.c
-    ${TK_ROOT}/src/base/*.c
-    ${TK_ROOT}/src/ui_loader/*.c
-    ${TK_ROOT}/src/xml/*.c
-    ${TK_ROOT}/src/svg/*.c
-    ${TK_ROOT}/src/clip_board/*.c
-    ${TK_ROOT}/src/font_loader/*.c
-    ${TK_ROOT}/src/blend/*.c
-    ${TK_ROOT}/src/image_loader/*.c
-    ${TK_ROOT}/src/designer_support/*.c
-    ${TK_ROOT}/src/widget_animators/*.c
-    ${TK_ROOT}/src/conf_io/*.c
-    ${TK_ROOT}/src/misc/*.c
-    ${TK_ROOT}/src/window_animators/*.c
-    ${TK_ROOT}/src/dialog_highlighters/*.c
-    ${TK_ROOT}/src/window_manager/window_manager_default.c
-    ${TK_ROOT}/src/graphic_buffer/graphic_buffer_default.c
-)
-set(SOURCE_FILES ${SOURCE_FILES} ${AWTK_SRC})
-
 
 if (NATIVE_WINDOW STREQUAL "sdl")
     set(SOURCE_FILES ${SOURCE_FILES} ${TK_ROOT}/src/native_window/native_window_sdl.c)
@@ -238,10 +168,8 @@ else()
     set(SOURCE_FILES ${SOURCE_FILES} ${TK_ROOT}/src/native_window/native_window_raw.c)
 endif()
 
-set(SOURCE_FILES ${SOURCE_FILES}        
-    ${TK_ROOT}/src/lcd/lcd_mono.c
-    ${TK_ROOT}/src/main_loop/main_loop_simple.c
-)
+file(GLOB LCD_MEM_SRC ${TK_ROOT}/src/lcd/lcd_mem_*.c)
+set(SOURCE_FILES ${SOURCE_FILES} ${LCD_MEM_SRC})
 
 if (LCD STREQUAL "SDL_GPU")
     set(SOURCE_FILES ${SOURCE_FILES}        
@@ -262,66 +190,7 @@ elseif (LCD STREQUAL "FB_GL")
     set(SOURCE_FILES ${SOURCE_FILES} ${TK_ROOT}/src/lcd/lcd_nanovg.c)
 endif()
 
-file(GLOB LCD_MEM_SRC ${TK_ROOT}/src/lcd/lcd_mem_*.c)
-set(SOURCE_FILES ${SOURCE_FILES}        
-    ${TK_ROOT}/src/input_methods/input_method_creator.c
-    ${LCD_MEM_SRC}
-)
-
-if (NANOVG_BACKEND STREQUAL AGGE OR NANOVG_BACKEND STREQUAL AGG)
-    set(SOURCE_FILES ${SOURCE_FILES} ${TK_ROOT}/src/vgcanvas/vgcanvas_nanovg_soft.c)
-
-else()
-    set(SOURCE_FILES ${SOURCE_FILES} ${TK_ROOT}/src/vgcanvas/vgcanvas_nanovg_gl.c)
-endif()
-
-if (INPUT_ENGINE STREQUAL "null")
-    set(SOURCE_FILES ${SOURCE_FILES} ${TK_ROOT}/src/input_engines/input_engine_null.c)
-else()
-    set(SOURCE_FILES ${SOURCE_FILES} ${TK_ROOT}/src/input_engines/input_engine_pinyin.cpp)
-endif()
-
-file(GLOB SRC_SRC 
-    ${TK_ROOT}/src/awtk_global.c
-    ${TK_ROOT}/src/widgets/*.c
-    ${TK_ROOT}/src/tkc/*.c
-    ${TK_ROOT}/src/fscript_ext/*.c
-    ${TK_ROOT}/src/platforms/pc/*.c
-    ${TK_ROOT}/src/ext_widgets/*.c
-    ${TK_ROOT}/src/ext_widgets/*/*.c
-)
-set(SOURCE_FILES ${SOURCE_FILES} ${SRC_SRC})
-
-#添加streams代码
-set(STREAMS ${TK_ROOT}/src/streams)
-file(GLOB STREAMS_SRC 
-    ${STREAMS}/buffered/*.c
-    ${STREAMS}/file/*.c
-    ${STREAMS}/inet/*.c
-    ${STREAMS}/mem/*.c
-    ${STREAMS}/serial/*.c
-    ${STREAMS}/shdlc/*.c
-    ${STREAMS}/noisy/*.c
-    ${STREAMS}/misc/*.c
-)
-set(SOURCE_FILES ${SOURCE_FILES} ${STREAMS_SRC})
-
-#添加file_transfer代码
-set(FILE_TRANSFER ${TK_ROOT}/src/file_transfer)
-file(GLOB FILE_TRANSFER_SRC ${FILE_TRANSFER}/*.c)
-set(SOURCE_FILES ${SOURCE_FILES} ${FILE_TRANSFER_SRC})
-
-#添加compressors代码
-set(COMPRESSORS ${TK_ROOT}/src/compressors)
-file(GLOB COMPRESSORS_SRC ${COMPRESSORS}/*.c)
-set(SOURCE_FILES ${SOURCE_FILES} ${COMPRESSORS_SRC})
-
-#添加ubjson代码
-set(UBJSON ${TK_ROOT}/src/ubjson)
-file(GLOB UBJSON_SRC ${UBJSON}/*.c)
-set(SOURCE_FILES ${SOURCE_FILES} ${UBJSON_SRC})
-
-#添加SDL代码
+# 添加SDL代码
 set(SDL ${TK_ROOT}/3rd/SDL)
 file(GLOB SDL_SRC
     ${SDL}/src/atomic/*.c
@@ -360,30 +229,167 @@ file(GLOB SDL_SRC
 )
 set(SOURCE_FILES ${SOURCE_FILES} ${SDL_SRC})
 
+# 添加gpinyin源文件
+set(GPINYIN ${TK_ROOT}/3rd/gpinyin)
+aux_source_directory(${GPINYIN}/src SRC)
+set(SOURCE_FILES ${SOURCE_FILES} ${SRC})
+set(SOURCE_FILES ${SOURCE_FILES} ${TK_ROOT}/src/input_methods/input_method_creator.c)
+
+if (INPUT_ENGINE STREQUAL "pinyin")
+    set(SOURCE_FILES ${SOURCE_FILES} ${TK_ROOT}/src/input_engines/input_engine_pinyin.cpp)
+else()
+    set(SOURCE_FILES ${SOURCE_FILES} ${TK_ROOT}/src/input_engines/input_engine_null.c)
+endif()
+
+# 添加linebreak源文件
+set(LIBUNIBREAK ${TK_ROOT}/3rd/libunibreak)
+set(SOURCE_FILES ${SOURCE_FILES}        
+    ${LIBUNIBREAK}/graphemebreak.c
+    ${LIBUNIBREAK}/linebreak.c
+    ${LIBUNIBREAK}/linebreakdef.c
+    ${LIBUNIBREAK}/unibreakbase.c
+    ${LIBUNIBREAK}/unibreakdef.c
+    ${LIBUNIBREAK}/wordbreak.c
+    ${LIBUNIBREAK}/emojidef.c
+    ${LIBUNIBREAK}/linebreakdata.c
+)
+
+# 添加fribidi代码
+set(FRIBIDI ${TK_ROOT}/3rd/fribidi)
+file(GLOB FRIBIDI_SRC ${FRIBIDI}/*.c)
+set(SOURCE_FILES ${SOURCE_FILES} ${FRIBIDI_SRC})
+
+# 添加lz4源文件
+set(LZ4 ${TK_ROOT}/3rd/lz4)
+set(SOURCE_FILES ${SOURCE_FILES}        
+    ${LZ4}/lz4.c
+    ${LZ4}/lz4frame.c
+    ${LZ4}/lz4hc.c
+    ${LZ4}/xxhash.c
+)
+
+# 添加miniz源文件
+set(MINIZ ${TK_ROOT}/3rd/miniz)
+set(MINIZ_SRC       
+    ${MINIZ}/miniz.c
+    ${MINIZ}/miniz_tdef.c
+    ${MINIZ}/miniz_tinfl.c
+    ${MINIZ}/miniz_zip.c
+)
+set(SOURCE_FILES ${SOURCE_FILES} ${MINIZ_SRC})
+
+# 添加compressors代码
+set(COMPRESSORS ${TK_ROOT}/src/compressors)
+file(GLOB COMPRESSORS_SRC ${COMPRESSORS}/*.c)
+set(SOURCE_FILES ${SOURCE_FILES} ${COMPRESSORS_SRC})
+
+# 添加csv代码
+set(CSV ${TK_ROOT}/src/csv)
+file(GLOB CSV_SRC ${CSV}/*.c)
+set(SOURCE_FILES ${SOURCE_FILES} ${CSV_SRC})
+
+# 添加ubjson代码
+set(UBJSON ${TK_ROOT}/src/ubjson)
+file(GLOB UBJSON_SRC ${UBJSON}/*.c)
+set(SOURCE_FILES ${SOURCE_FILES} ${UBJSON_SRC})
+
+# 添加cjson代码
+set(CJSON ${TK_ROOT}/3rd/cjson)
+file(GLOB CJSON_SRC ${CJSON}/*.c)
+set(SOURCE_FILES ${SOURCE_FILES} ${CJSON_SRC})
+
+# 添加conf_io代码
+set(CONF_IO ${TK_ROOT}/src/conf_io)
+file(GLOB CONF_IO_SRC ${CONF_IO}/*.c)
+set(SOURCE_FILES ${SOURCE_FILES} ${CONF_IO_SRC})
+
+# 添加hal代码
+set(HAL ${TK_ROOT}/src/hal)
+file(GLOB HAL_SRC 
+    ${HAL}/*.c
+    ${HAL}/windows/*.c
+)
+set(SOURCE_FILES ${SOURCE_FILES} ${HAL_SRC})
+
+# 添加mbedtls代码
+set(MBEDTLS ${TK_ROOT}/3rd/mbedtls)
+file(GLOB MBEDTLS_SRC 
+    ${MBEDTLS}/library/*.c
+    ${MBEDTLS}/3rdparty/everest/library/everest.c
+    ${MBEDTLS}/3rdparty/everest/library/x25519.c
+    ${MBEDTLS}3rdparty/everest/library/Hacl_Curve25519_joined.c
+)
+set(SOURCE_FILES ${SOURCE_FILES} ${MBEDTLS_SRC})
+
+# 添加streams代码
+set(STREAMS ${TK_ROOT}/src/streams)
+file(GLOB STREAMS_SRC 
+    ${STREAMS}/buffered/*.c
+    ${STREAMS}/file/*.c
+    ${STREAMS}/inet/*.c
+    ${STREAMS}/mem/*.c
+    ${STREAMS}/serial/*.c
+    ${STREAMS}/shdlc/*.c
+    ${STREAMS}/noisy/*.c
+    ${STREAMS}/misc/*.c
+)
+set(SOURCE_FILES ${SOURCE_FILES} ${STREAMS_SRC})
+
+# 添加awtk内核代码
+file(GLOB AWTK_SRC 
+    ${TK_ROOT}/src/layouters/*.c
+    ${TK_ROOT}/src/base/*.c
+    ${TK_ROOT}/src/ui_loader/*.c
+    ${TK_ROOT}/src/xml/*.c
+    ${TK_ROOT}/src/svg/*.c
+    ${TK_ROOT}/src/clip_board/*.c
+    ${TK_ROOT}/src/font_loader/*.c
+    ${TK_ROOT}/src/blend/*.c
+    ${TK_ROOT}/src/image_loader/*.c
+    ${TK_ROOT}/src/designer_support/*.c
+    ${TK_ROOT}/src/widget_animators/*.c
+    ${TK_ROOT}/src/conf_io/*.c
+    ${TK_ROOT}/src/misc/*.c
+    ${TK_ROOT}/src/window_animators/*.c
+    ${TK_ROOT}/src/dialog_highlighters/*.c
+    ${TK_ROOT}/src/window_manager/window_manager_default.c
+    ${TK_ROOT}/src/graphic_buffer/graphic_buffer_default.c
+)
+set(SOURCE_FILES ${SOURCE_FILES} ${AWTK_SRC})
+
+file(GLOB SRC_SRC 
+    ${TK_ROOT}/src/awtk_global.c
+    ${TK_ROOT}/src/widgets/*.c
+    ${TK_ROOT}/src/tkc/*.c
+    ${TK_ROOT}/src/fscript_ext/*.c
+    ${TK_ROOT}/src/platforms/pc/*.c
+    ${TK_ROOT}/src/ext_widgets/*.c
+    ${TK_ROOT}/src/ext_widgets/*/*.c
+)
+set(SOURCE_FILES ${SOURCE_FILES} ${SRC_SRC})
+
+set(SOURCE_FILES ${SOURCE_FILES}        
+    ${TK_ROOT}/src/lcd/lcd_mono.c
+    ${TK_ROOT}/src/main_loop/main_loop_simple.c
+)
+
 add_library(${PROJ} STATIC ${SOURCE_FILES})
 set_target_properties(${PROJ} PROPERTIES FOLDER "lib")
 target_link_libraries(${PROJ} ${OS_LIBS})
-add_compile_options(${COMMON_CFLAGS})
 set_target_properties(${PROJ} PROPERTIES STATIC_LABRARY_FLAGS  ${OS_SUBSYSTEM_CONSOLE})
 add_definitions(${OS_FLAGS} ${COMMON_CCFLAGS})
 
-#add cjson
-find_file(CJSON cJSON.c ${TK_ROOT}/3rd/cjson)
-if(CJSON)
-    aux_source_directory(${TK_ROOT}/3rd/cjson CJSON_SRC)
-    add_library(cjson STATIC ${CJSON_SRC})
-    set_target_properties(cjson PROPERTIES FOLDER "lib")
-endif(CJSON)
-
-#添加包含路径
+# 添加包含路径
 set(CPPPATH 
     ${TK_ROOT}/src
     ${TK_ROOT}/3rd 
     ${TK_ROOT}/src/ext_widgets 
     ${TK_ROOT}/3rd/pixman 
     ${TK_ROOT}/3rd/agge 
-    ${TK_ROOT}/3rd/agg/include
     ${TK_ROOT}/3rd/cjson
+    ${TK_ROOT}/3rd/fribidi
+    ${TK_ROOT}/3rd/mbedtls/include
+    ${TK_ROOT}/3rd/mbedtls/3rdparty/everest/include
     ${TK_ROOT}/3rd/nanovg 
     ${TK_ROOT}/3rd/nanovg/gl 
     ${TK_ROOT}/3rd/nanovg/base 
@@ -401,13 +407,13 @@ set(CPPPATH
 )
 target_include_directories(${PROJ} PRIVATE ${CPPPATH})
 
-#编译demo
+# 编译demo
 add_subdirectory(awtk/demos)
-#编译tools
+# 编译tools
 add_subdirectory(awtk/tools)
-#编译tests
+# 编译tests
 #add_subdirectory(awtk/tests)
 
-#编译example
+# 编译example
 add_subdirectory(awtk-examples/HelloDesigner-Demo)
 add_subdirectory(awtk-examples/HelloWorld.Xml-Demo)

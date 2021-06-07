@@ -13,7 +13,5 @@ set_target_properties(${PRJ} PROPERTIES  LINK_FLAGS ${OS_SUBSYSTEM_WINDOWS})
 # 引用目录
 target_include_directories(${PRJ} PRIVATE ${CPPPATH})
 
-
-
 # 引用库
 target_link_libraries(${PRJ} PRIVATE awtk)
