@@ -6,7 +6,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${DEMOPATH}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${DEMOPATH}/bin)
 
 # 添加程序代码
-set(PRJ HelloDesigner-Demo)
+set(PRJ awtk-demo-hello-designer)
 set(SRC ${DEMOPATH}/src)
 file(GLOB SOURCE_FILES 
     ${SRC}/*.c
