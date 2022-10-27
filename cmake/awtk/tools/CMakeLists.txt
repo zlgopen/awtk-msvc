@@ -21,7 +21,6 @@ endfunction(tools_prop_config)
 
 #theme_gen
 add_library(theme_gen
-    ${TK_ROOT}/tools/theme_gen/theme_gen.cc
     ${TK_ROOT}/tools/theme_gen/xml_theme_gen.cc
 )
 add_executable(themegen ${TK_ROOT}/tools/theme_gen/main.cc)

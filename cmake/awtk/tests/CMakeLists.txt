@@ -1,4 +1,3 @@
-
 set(GTEST_ROOT ${TK_ROOT}/3rd/gtest/googletest)
 set(TESTS_DIR ${TK_ROOT}/tests)
 file(GLOB SRC

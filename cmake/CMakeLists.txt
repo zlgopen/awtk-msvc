@@ -7,7 +7,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 # 设置目录
 set(TK_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../awtk/lib)
 set(TK_BIN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../awtk/bin)
-set(TK_EXAMPLE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../awtk-examples)
+set(TK_EXAMPLE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../HelloDesigner-Demo)
 
 # 输出目录
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${TK_LIB_DIR})
@@ -259,6 +259,14 @@ set(FRIBIDI ${TK_ROOT}/3rd/fribidi)
 file(GLOB FRIBIDI_SRC ${FRIBIDI}/*.c)
 set(SOURCE_FILES ${SOURCE_FILES} ${FRIBIDI_SRC})
 
+# 添加nativefiledialog源文件
+set(NATIVEFILEDIALOG ${TK_ROOT}/3rd/nativefiledialog)
+file(GLOB NATIVEFILEDIALOG_SRC
+    ${NATIVEFILEDIALOG}/src/nfd_common.c
+    ${NATIVEFILEDIALOG}/src/nfd_win.cpp
+)
+set(SOURCE_FILES ${SOURCE_FILES} ${NATIVEFILEDIALOG_SRC})
+
 # 添加lz4源文件
 set(LZ4 ${TK_ROOT}/3rd/lz4)
 set(SOURCE_FILES ${SOURCE_FILES}        
@@ -332,8 +340,19 @@ file(GLOB STREAMS_SRC
     ${STREAMS}/shdlc/*.c
     ${STREAMS}/noisy/*.c
     ${STREAMS}/misc/*.c
+    ${STREAMS}/statistics/*.c
 )
 set(SOURCE_FILES ${SOURCE_FILES} ${STREAMS_SRC})
+
+# 添加debugger代码
+set(DEBUGGER ${TK_ROOT}/src/debugger)
+file(GLOB DEBUGGER_SRC ${DEBUGGER}/*.c)
+set(SOURCE_FILES ${SOURCE_FILES} ${DEBUGGER_SRC})
+
+# 添加charset代码
+set(CHARSET ${TK_ROOT}/src/charset)
+file(GLOB CHARSET_SRC ${CHARSET}/*.c)
+set(SOURCE_FILES ${SOURCE_FILES} ${CHARSET_SRC})
 
 # 添加awtk内核代码
 file(GLOB AWTK_SRC 
@@ -348,7 +367,6 @@ file(GLOB AWTK_SRC
     ${TK_ROOT}/src/image_loader/*.c
     ${TK_ROOT}/src/designer_support/*.c
     ${TK_ROOT}/src/widget_animators/*.c
-    ${TK_ROOT}/src/conf_io/*.c
     ${TK_ROOT}/src/misc/*.c
     ${TK_ROOT}/src/window_animators/*.c
     ${TK_ROOT}/src/dialog_highlighters/*.c
@@ -401,6 +419,8 @@ set(CPPPATH
     ${TK_ROOT}/3rd/agge/include 
     ${TK_ROOT}/3rd/gpinyin/include 
     ${TK_ROOT}/3rd/libunibreak 
+    ${TK_ROOT}/3rd/nativefiledialog/src
+    ${TK_ROOT}/3rd/nativefiledialog/src/include
     ${TK_ROOT}/3rd/gtest/googletest 
     ${TK_ROOT}/3rd/gtest/googletest/include 
     ${TK_ROOT}/tools
@@ -412,8 +432,7 @@ add_subdirectory(awtk/demos)
 # 编译tools
 add_subdirectory(awtk/tools)
 # 编译tests
-#add_subdirectory(awtk/tests)
+# add_subdirectory(awtk/tests)
 
-# 编译example
-add_subdirectory(awtk-examples/HelloDesigner-Demo)
-add_subdirectory(awtk-examples/HelloWorld.Xml-Demo)
+# 编译HelloDesigner-Demo
+add_subdirectory(HelloDesigner-Demo)
