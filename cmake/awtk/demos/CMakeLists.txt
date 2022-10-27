@@ -35,6 +35,13 @@ target_sources(${PRJ} PRIVATE ${DEMO_MAIN} ${DEMOPATH}/demo_ui_app.c)
 set_target_properties(${PRJ} PROPERTIES FOLDER "demos")
 PRJ_CONFIG(${PRJ})
 
+#DemoUIOld
+set(PRJ demouiold)
+add_executable(${PRJ} "")
+target_sources(${PRJ} PRIVATE ${DEMO_MAIN} ${DEMOPATH}/demo_ui_old_app.c)
+set_target_properties(${PRJ} PROPERTIES FOLDER "demos")
+PRJ_CONFIG(${PRJ})
+
 #Demo1
 set(PRJ demo1)
 add_executable(${PRJ} "")
