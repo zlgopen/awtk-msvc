@@ -435,4 +435,8 @@ add_subdirectory(awtk/tools)
 # add_subdirectory(awtk/tests)
 
 # 编译awtk-demo-hello-designer
+if (EXISTS ${TK_EXAMPLE_DIR})
 add_subdirectory(awtk-demo-hello-designer)
+else()
+message("!! Missing project dir: ${TK_EXAMPLE_DIR}")
+endif()
