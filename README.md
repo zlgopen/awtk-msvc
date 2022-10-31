@@ -82,9 +82,9 @@ git clone https://github.com/zlgopen/awtk-msvc.git
 @set VS_GENERATOR="Visual Studio 14 Win64"
 ```
 
-​参数中的"Win64"表示生成 64 位工程，如需生成 32 位工程，修改参数为"Visual Studio 14"即可。
+参数中的"Win64"表示生成 64 位工程，如需生成 32 位工程，修改参数为"Visual Studio 14"即可。
 
-​VS_PLATFORM 参数取值可参考下图：
+VS_PLATFORM 参数取值可参考下图：
 
 ![generator](./docs/images/generator.png)
 
@@ -92,11 +92,11 @@ git clone https://github.com/zlgopen/awtk-msvc.git
 
 ### 3.2 执行 build_gen.bat 文件
 
-​双击 build_gen.bat 文件，将生成VS工程到build文件夹下。
+双击 build_gen.bat 文件，将生成VS工程到build文件夹下。
 
 ## 4 打开VS工程
 
-​打开 build 文件夹，双击 awtk-msvc.sln 文件即可打开 VS 工程。
+打开 build 文件夹，双击 awtk-msvc.sln 文件即可打开 VS 工程。
 
 ## 5 编译并运行VS工程中的项目
 
@@ -109,7 +109,7 @@ git clone https://github.com/zlgopen/awtk-msvc.git
 
 双击运行 awtk/bin/demoui.exe。
 
-### 5.1 运行 awtk-demo-hello-designer
+### 5.2 运行 awtk-demo-hello-designer
 
 在运行 awtk-demo-hello-designer 前，需要先打包项目资源，可以在 AWTK Designer 中打开该项目打包资源，也可以通过 scripts/update_res.py 脚本打包资源，步骤如下：
 
