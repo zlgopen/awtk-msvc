@@ -341,8 +341,24 @@ file(GLOB STREAMS_SRC
     ${STREAMS}/noisy/*.c
     ${STREAMS}/misc/*.c
     ${STREAMS}/statistics/*.c
+    ${STREAMS}/*.c
 )
 set(SOURCE_FILES ${SOURCE_FILES} ${STREAMS_SRC})
+
+# 添加service代码
+set(SERVICE ${TK_ROOT}/src/service)
+file(GLOB SERVICE_SRC 
+    ${SERVICE}/*.c
+)
+set(SOURCE_FILES ${SOURCE_FILES} ${SERVICE_SRC})
+
+# 添加remote_ui代码
+set(REMOTE_UI ${TK_ROOT}/src/remote_ui)
+file(GLOB REMOTE_UI_SRC 
+    ${REMOTE_UI}/client/*.c
+    ${REMOTE_UI}/service/*.c
+)
+set(SOURCE_FILES ${SOURCE_FILES} ${REMOTE_UI_SRC})
 
 # 添加debugger代码
 set(DEBUGGER ${TK_ROOT}/src/debugger)

@@ -85,11 +85,11 @@ set_target_properties(${PRJ} PROPERTIES FOLDER "demos")
 PRJ_CONFIG(${PRJ})
 
 #PreviewUI
-set(PRJ preview_ui)
-add_executable(${PRJ} "")
-target_sources(${PRJ} PRIVATE ${DEMOPATH}/preview_ui.c)
-set_target_properties(${PRJ} PROPERTIES FOLDER "demos")
-PRJ_CONFIG(${PRJ})
+#set(PRJ preview_ui)
+#add_executable(${PRJ} "")
+#target_sources(${PRJ} PRIVATE ${DEMOPATH}/preview_ui.c)
+#set_target_properties(${PRJ} PROPERTIES FOLDER "demos")
+#PRJ_CONFIG(${PRJ})
 
 #DemoDesktop
 set(PRJ demo_desktop)
