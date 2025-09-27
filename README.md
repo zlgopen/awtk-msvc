@@ -25,11 +25,7 @@
 git clone https://github.com/zlgopen/awtk.git
 ```
 
-### 2.2 下载 awtk-demo-hello-designer
-
-在 [AWStudio](https://awtk.zlg.cn/) 中下载示例程序 HelloDesigner-Demo，或者前往 JihuLab 仓库下载 [awtk-demo-hello-designer](https://jihulab.com/awtk/awtk-demo-hello-designer)。
-
-### 2.3 下载 awtk-msvc
+### 2.2 下载 awtk-msvc
 
 从 GitHub 仓库克隆 awtk-msvc，命令如下
 
@@ -37,15 +33,13 @@ git clone https://github.com/zlgopen/awtk.git
 git clone https://github.com/zlgopen/awtk-msvc.git
 ```
 
-**​确保 awtk-msvc 与 awtk 及 awtk-demo-hello-designer 在同一文件夹下。**
+**​确保 awtk-msvc 与 awtk 在同一文件夹下。**
 
 ## 3 生成VS工程
 
 ### 3.1 修改 build_gen.bat 文件
 
 #### 3.1.1 设置渲染模式
-
-可根据需要自行修改：
 
 ```bat
 @rem 设置渲染模式
@@ -56,8 +50,6 @@ git clone https://github.com/zlgopen/awtk-msvc.git
 > “rem”为批处理的注释符号，如需修改渲染模式，删去对应语句的“rem“即可。
 
 #### 3.1.2 设置启用谷歌拼音
-
-该项通常无需修改，默认即可：
 
 ```bat
 @rem 设置启用谷歌拼音
@@ -73,7 +65,23 @@ git clone https://github.com/zlgopen/awtk-msvc.git
 
 工程默认禁用 C4244、C4267 及 C4018 警告，用户可自行开启警告。
 
-#### 3.1.4 设置VS平台
+#### 3.1.4 设置应用工程配置
+
+```bat
+@rem 应用工程配置
+@set PRJ_ENABLE=ON
+@set PRJ_NAME=Application
+@set PRJ_LCDW=800
+@set PRJ_LCDH=480
+@set PRJ_TYPE=2
+@set PRJ_PATH="C:\Users\UserName\Documents\AWStudioSolutions\AwtkApplication0"
+```
+
+设置 PRJ_ENABLE=ON 启用编译应用工程，通常只需要修改 PRJ_PATH 指向 AWTK 应用工程文件夹路径。 
+
+注意工程需要由 AWStudio-V2.x 创建，并已经构建好 UI，确保工程 build 文件夹生成了 res 文件夹。
+
+#### 3.1.5 设置VS平台
 
 可根据用户安装的VS版本（vs2015或以上），自行修改VS平台：
 
@@ -98,26 +106,3 @@ VS_PLATFORM 参数取值可参考下图：
 
 打开 build 文件夹，双击 awtk-msvc.sln 文件即可打开 VS 工程。
 
-## 5 编译并运行VS工程中的项目
-
-打开 VS 工程后，在"解决方案资源管理器"中右键点击"解决方案awtk-msvc"，选择右键菜单中的【生成解决方案】，可以编译 VS 工程中的项目，编译顺序如下：
-
-1. 编译生成 awtk 的库文件、工具以及内置的示例程序，分别放在 awtk 的 lib、tools 以及 bin 目录中。
-2. 编译生成 awtk-demo-hello-designer 项目的可执行文件，放在 awtk-demo-hello-designer 的 bin 目录中。
-
-### 5.1 运行 awtk 的内置例程 demoui
-
-双击运行 awtk/bin/demoui.exe。
-
-### 5.2 运行 awtk-demo-hello-designer
-
-在运行 awtk-demo-hello-designer 前，需要先打包项目资源，可以在 AWTK Designer 中打开该项目打包资源，也可以通过 scripts/update_res.py 脚本打包资源，步骤如下：
-
-1. 下载并安装 [Python](https://python.org/downloads/)。
-2. 在 awtk-demo-hello-designer 目录下打开终端，执行以下命令，打包资源：
-
-```bash
-python scripts/update_res.py all
-```
-
-打包好项目资源后，双击运行 awtk-demo-hello-designer/bin/demo.exe。

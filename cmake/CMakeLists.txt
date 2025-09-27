@@ -7,7 +7,6 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 # 设置目录
 set(TK_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../awtk/lib)
 set(TK_BIN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../awtk/bin)
-set(TK_EXAMPLE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../awtk-demo-hello-designer)
 
 # 输出目录
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${TK_LIB_DIR})
@@ -451,9 +450,8 @@ add_subdirectory(awtk/tools)
 # 编译tests
 # add_subdirectory(awtk/tests)
 
-# 编译awtk-demo-hello-designer
-if (EXISTS ${TK_EXAMPLE_DIR})
-add_subdirectory(awtk-demo-hello-designer)
-else()
-message("!! Missing project dir: ${TK_EXAMPLE_DIR}")
+# 编译app
+set(PRJ_ENABLE OFF CACHE BOOL "")
+if(PRJ_ENABLE)
+  add_subdirectory(awtk-apps)
 endif()
