@@ -13,6 +13,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${TK_LIB_DIR})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${TK_LIB_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${TK_BIN_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${TK_BIN_DIR})
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${TK_LIB_DIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${TK_BIN_DIR})
 
 # 项目名
 project(awtk-msvc)
@@ -58,6 +60,8 @@ endif()
 
 
 ### 构建编译参数
+
+set(AWTK_DLL_LINKFLAGS "")
 
 set(COMMON_CCFLAGS " -DTK_ROOT=\\\"${TK_ROOT}\\\" ")
 #set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITHOUT_WINDOW_ANIMATOR_CACHE=1 ")
@@ -108,6 +112,14 @@ else()
 endif()
 
 if (CMAKE_SYSTEM_NAME MATCHES "Windows")
+  if (MINGW)
+    set(OS_LIBS "kernel32" "gdi32" "user32" "winmm.lib" "imm32.lib" "version.lib" "shell32.lib" "Setupapi.lib" "ole32.lib" "Oleaut32.lib" "Advapi32.lib" "oleaut32" "uuid" "stdc++" "ws2_32" "iphlpapi")
+    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DMINGW -DWINDOWS -D_CONSOLE  -Wall ")
+
+    set(OS_SUBSYSTEM_CONSOLE " -mconsole ")
+    set(OS_SUBSYSTEM_WINDOWS " -mwindows ")
+    set(AWTK_DLL_LINKFLAGS "${TK_ROOT}/dllexports/awtk.def")
+  else()
     set(OS_LIBS "gdi32" "user32" "winmm.lib" "imm32.lib" "version.lib" "shell32.lib" "ole32.lib" "Oleaut32.lib" "Advapi32.lib" "DelayImp.lib" "psapi.lib")
     set(OS_FLAGS " -DWIN32 -D_WIN32 -DWINDOWS /EHsc -D_CONSOLE /FS /Z7 ")
     set(OS_FLAGS "${OS_FLAGS} ${DISABLE_WARNING_FLAGS}")
@@ -122,7 +134,8 @@ if (CMAKE_SYSTEM_NAME MATCHES "Windows")
         set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -D_WIN64 ")
     endif()
     set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DHAVE_LIBC ")
-
+    set(AWTK_DLL_LINKFLAGS "/DEF:${TK_ROOT}/dllexports/awtk.def")
+  endif()
     set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DSDL_REAL_API -DSDL_HAPTIC_DISABLED -DSDL_SENSOR_DISABLED -DSDL_JOYSTICK_DISABLED ")
     set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_CONSTANT_MACROS -D_HAS_EXCEPTIONS=0 -D_HAS_ITERATOR_DEBUGGING=0 -D_ITERATOR_DEBUG_LEVEL=0 -D_SCL_SECURE=0")
     set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -D_SECURE_SCL=0 -D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_DEPRECATE ")
@@ -154,6 +167,8 @@ if (NANOVG_BACKEND STREQUAL AGGE)
 else()
     set(SOURCE_FILES ${SOURCE_FILES} ${TK_ROOT}/src/vgcanvas/vgcanvas_nanovg_gl.c)
 endif()
+set(SOURCE_FILES ${SOURCE_FILES} ${TK_ROOT}/src/vgcanvas/vgcanvas_nanovg_gl2.c)
+set(SOURCE_FILES ${SOURCE_FILES} ${TK_ROOT}/src/vgcanvas/vgcanvas_nanovg_gl3.c)
 
 # 添加glad源文件
 set(GLAD ${TK_ROOT}/3rd/glad)
@@ -341,6 +356,7 @@ file(GLOB STREAMS_SRC
     ${STREAMS}/noisy/*.c
     ${STREAMS}/misc/*.c
     ${STREAMS}/statistics/*.c
+    ${STREAMS}/process/*.c
     ${STREAMS}/*.c
 )
 set(SOURCE_FILES ${SOURCE_FILES} ${STREAMS_SRC})
@@ -351,6 +367,13 @@ file(GLOB SERVICE_SRC
     ${SERVICE}/*.c
 )
 set(SOURCE_FILES ${SOURCE_FILES} ${SERVICE_SRC})
+
+# 添加romfs代码
+set(ROMFS ${TK_ROOT}/src/romfs)
+file(GLOB ROMFS_SRC 
+    ${ROMFS}/romfs.c
+)
+set(SOURCE_FILES ${SOURCE_FILES} ${ROMFS_SRC})
 
 # 添加remote_ui代码
 set(REMOTE_UI ${TK_ROOT}/src/remote_ui)
@@ -407,11 +430,15 @@ set(SOURCE_FILES ${SOURCE_FILES}
     ${TK_ROOT}/src/main_loop/main_loop_simple.c
 )
 
-add_library(${PROJ} STATIC ${SOURCE_FILES})
+add_library(${PROJ} SHARED ${SOURCE_FILES})
 set_target_properties(${PROJ} PROPERTIES FOLDER "lib")
+set_target_properties(${PROJ} PROPERTIES PREFIX "")
 target_link_libraries(${PROJ} ${OS_LIBS})
-set_target_properties(${PROJ} PROPERTIES STATIC_LABRARY_FLAGS  ${OS_SUBSYSTEM_CONSOLE})
+target_link_options(${PROJ} PRIVATE ${AWTK_DLL_LINKFLAGS})
 add_definitions(${OS_FLAGS} ${COMMON_CCFLAGS})
+
+execute_process(COMMAND node ${TK_ROOT}/tools/idl_gen/index.js ${TK_ROOT}/tools/idl_gen/idl.json)
+execute_process(COMMAND node ${TK_ROOT}/tools/dll_def_gen/index.js ${TK_ROOT}/tools/idl_gen/idl.json ${TK_ROOT}/dllexports/awtk.def false)
 
 # 添加包含路径
 set(CPPPATH 
