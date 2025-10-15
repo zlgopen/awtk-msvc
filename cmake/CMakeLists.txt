@@ -482,3 +482,9 @@ set(PRJ_ENABLE OFF CACHE BOOL "")
 if(PRJ_ENABLE)
   add_subdirectory(awtk-apps)
 endif()
+
+# 编译widget
+set(WIDGET_ENABLE OFF CACHE BOOL "")
+if(WIDGET_ENABLE)
+  add_subdirectory(awtk-widgets)
+endif()
