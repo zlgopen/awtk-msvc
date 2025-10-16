@@ -17,7 +17,7 @@ set(PRJ_LCDH 480 CACHE STRING "")
 set(PRJ_TYPE 2 CACHE STRING "0-APP_MOBILE, 1-APP_SIMULATOR, 2-APP_DESKTOP")
 set(PRJ_PATH "/path/to/app/project" CACHE STRING "")
 set(APP_PATH ${PRJ_PATH}/Logic)
-set(BIN_PATH ${PRJ_PATH}/build)
+set(BIN_PATH ${PRJ_PATH}/build/bin)
 
 
 # 输出目录

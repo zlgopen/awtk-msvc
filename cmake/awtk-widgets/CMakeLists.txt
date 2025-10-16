@@ -1,8 +1,8 @@
-function(WIDGET_CONFIG WIDGET BIN)
+function(WIDGET_CONFIG WIDGET IDL)
     if (MINGW)
-        set(DLL_LINKFLAGS "${BIN}/dll.def")
+        set(DLL_LINKFLAGS "${IDL}/${WIDGET}.def")
     else()
-        set(DLL_LINKFLAGS "/DEF:${BIN}/dll.def")
+        set(DLL_LINKFLAGS "/DEF:${IDL}/${WIDGET}.def")
     endif()
     # 链接属性
     target_link_options(${WIDGET} PRIVATE ${DLL_LINKFLAGS})
@@ -17,7 +17,8 @@ endfunction()
 set(WIDGET_NAME "Widget" CACHE STRING "")
 set(WIDGET_PRJ_PATH "/path/to/app/project" CACHE STRING "")
 set(WIDGET_SRC_PATH ${WIDGET_PRJ_PATH}/Logic/src)
-set(BIN_PATH ${WIDGET_PRJ_PATH}/build)
+set(BIN_PATH ${WIDGET_PRJ_PATH}/build/bin)
+set(IDL_PATH ${WIDGET_PRJ_PATH}/build/idl_def)
 
 
 # 输出目录
@@ -34,7 +35,7 @@ file(GLOB_RECURSE SRC_FILES "${WIDGET_SRC_PATH}/*.cpp" "${WIDGET_SRC_PATH}/*.c")
 target_sources(${WIDGET_NAME} PRIVATE ${SRC_FILES})
 set_target_properties(${WIDGET_NAME} PROPERTIES FOLDER "widgets")
 set_target_properties(${WIDGET_NAME} PROPERTIES PREFIX "")
-WIDGET_CONFIG(${WIDGET_NAME} ${BIN_PATH})
+WIDGET_CONFIG(${WIDGET_NAME} ${IDL_PATH})
 
-execute_process(COMMAND node ${TK_ROOT}/tools/idl_gen/index.js ${BIN_PATH}/idl.json ${WIDGET_SRC_PATH} ${TK_ROOT}/tools/idl_gen/idl.json)
-execute_process(COMMAND node ${TK_ROOT}/tools/dll_def_gen/index.js ${BIN_PATH}/idl.json ${BIN_PATH}/dll.def false)
+execute_process(COMMAND node ${TK_ROOT}/tools/idl_gen/index.js ${IDL_PATH}/${WIDGET_NAME}.json ${WIDGET_SRC_PATH} ${TK_ROOT}/tools/idl_gen/idl.json)
+execute_process(COMMAND node ${TK_ROOT}/tools/dll_def_gen/index.js ${IDL_PATH}/${WIDGET_NAME}.json ${IDL_PATH}/${WIDGET_NAME}.def false)

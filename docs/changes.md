@@ -1,5 +1,9 @@
 # 最新动态
 
+2025/10/16
+  * 加入编译widget dll工程的支持
+  * 按AWStudio-2.x的build文件组织结构生成app和widget的编译产物
+
 2025/10/11
   * 修改脚本支持生成"MinGW Makefiles"工程，可以通过mingw32-make执行构建
   * 修改脚本让awtk工程生成dll动态库，删除原来的静态库方式
