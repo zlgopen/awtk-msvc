@@ -49,6 +49,15 @@ set(VGCANVAS "NANOVG")
 set(NANOVG_BACKEND "AGGE" CACHE STRING "")
 set_property(CACHE NANOVG_BACKEND PROPERTY STRINGS "AGGE" "GLES2")
 
+# 设置双向排版实现：sheenbidi (默认) 或 fribidi
+set(BIDI_BACKEND "sheenbidi" CACHE STRING "")
+set_property(CACHE BIDI_BACKEND PROPERTY STRINGS "sheenbidi" "fribidi")
+if (BIDI_BACKEND STREQUAL "fribidi")
+    set(BIDI_INC_DIR ${TK_ROOT}/3rd/fribidi)
+else()
+    set(BIDI_INC_DIR ${TK_ROOT}/3rd/SheenBidi-3.0.0/Headers ${TK_ROOT}/3rd/SheenBidi-3.0.0/Source)
+endif()
+
 if (NANOVG_BACKEND STREQUAL "AGGE")
     set(LCD "SDL_FB")
     set(FRAME_BUFFER_FORMAT "bgr565")
@@ -73,6 +82,11 @@ set(COMMON_CCFLAGS " -DTK_ROOT=\\\"${TK_ROOT}\\\" ")
 set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_MBEDTLS=1 ")
 set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DENABLE_CURSOR=1 ")
 set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_TEXT_BIDI=1 ")
+if (BIDI_BACKEND STREQUAL "fribidi")
+    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_BIDI_FRIBIDI=1 ")
+else()
+    set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_BIDI_SHEEN=1 -DSB_CONFIG_EXPERIMENTAL_TEXT_API=1 ")
+endif()
 #set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DLOAD_ASSET_WITH_MMAP=1 ")
 set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_DATA_READER_WRITER=1 ")
 set(COMMON_CCFLAGS " ${COMMON_CCFLAGS} -DWITH_EVENT_RECORDER_PLAYER=1 ")
@@ -269,10 +283,16 @@ set(SOURCE_FILES ${SOURCE_FILES}
     ${LIBUNIBREAK}/linebreakdata.c
 )
 
-# 添加fribidi代码
-set(FRIBIDI ${TK_ROOT}/3rd/fribidi)
-file(GLOB FRIBIDI_SRC ${FRIBIDI}/*.c)
-set(SOURCE_FILES ${SOURCE_FILES} ${FRIBIDI_SRC})
+# 添加双向排版(bidi)实现代码
+if (BIDI_BACKEND STREQUAL "fribidi")
+    set(FRIBIDI ${TK_ROOT}/3rd/fribidi)
+    file(GLOB FRIBIDI_SRC ${FRIBIDI}/*.c)
+    set(SOURCE_FILES ${SOURCE_FILES} ${FRIBIDI_SRC})
+else()
+    set(SHEENBIDI ${TK_ROOT}/3rd/SheenBidi-3.0.0)
+    file(GLOB_RECURSE SHEENBIDI_SRC ${SHEENBIDI}/Source/*.c)
+    set(SOURCE_FILES ${SOURCE_FILES} ${SHEENBIDI_SRC})
+endif()
 
 # 添加nativefiledialog源文件
 set(NATIVEFILEDIALOG ${TK_ROOT}/3rd/nativefiledialog)
@@ -448,7 +468,7 @@ set(CPPPATH
     ${TK_ROOT}/3rd/pixman 
     ${TK_ROOT}/3rd/agge 
     ${TK_ROOT}/3rd/cjson
-    ${TK_ROOT}/3rd/fribidi
+    ${BIDI_INC_DIR}
     ${TK_ROOT}/3rd/mbedtls/include
     ${TK_ROOT}/3rd/mbedtls/3rdparty/everest/include
     ${TK_ROOT}/3rd/nanovg 
